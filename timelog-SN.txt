@@ -1,0 +1,35 @@
+FOODROUTE - TIME LOG
+Team member: Srinath Narayanan
+Format: Date | Start-End | Hours | Task
+
+============================================================
+MILESTONE 1 - Adjacency-list graph structure (target: Oct 25)
+============================================================
+
+Oct 22  2:00pm - 2:35pm   0.6h   Read repo layout, README, requirements;
+                                  looked at OSMnx docs to understand
+                                  MultiDiGraph structure and edge keys
+
+Oct 22  2:35pm - 3:45pm   1.2h   Wrote Graph class (add_node, add_edge,
+                                  neighbors, nodes, num_nodes, num_edges);
+                                  worked out parallel-edge storage and
+                                  negative-weight rejection
+
+Oct 22  3:45pm - 4:30pm   0.8h   Wrote from_osmnx(); read NetworkX MultiDiGraph
+                                  docs to confirm edges(data=True) yields one
+                                  tuple per key; handled isolated nodes and
+                                  missing-length error
+
+Oct 22  4:30pm - 5:45pm   1.2h   Wrote unit tests in tests/test_graph.py;
+                                  set up conftest.py for pytest path;
+                                  populated requirements.txt
+
+Oct 22  5:45pm - 6:15pm   0.5h   Ran pytest (17 passed); installed osmnx;
+                                  ran real-data check against Knox County
+                                  graph (91487 nodes, 237518 edges -- match)
+
+                                  ------------------
+                                  Milestone 1 total: 4.3h
+============================================================
+RUNNING TOTAL: 4.3h
+============================================================

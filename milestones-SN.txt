@@ -1,0 +1,199 @@
+FOODROUTE: INDIVIDUAL MILESTONE RUBRIC (40 POINTS)
+Team member: Srinath Narayanan
+Area: Core algorithm (graph structure, both heaps, Dijkstra variants, unit tests)
+Project: FoodRoute, Walking-Distance Food Access Analyzer (Knox County)
+
+Scope: these are the tasks Srinath is primarily responsible for, per the
+proposal's division of work. Pranav owns data loading, the k-d tree, and the
+map. Tejas owns benchmarks, accuracy comparison, and health analysis. Srinath's
+code is what both of them build on, so the early items are on the critical path.
+
+Point values are initial estimates of difficulty and importance and can be
+revised as technical challenges show up.
+
+
+============================================================
+SUMMARY
+============================================================
+  1. Adjacency-list graph structure ................................. 4
+  2. Binary heap with lazy deletion ................................. 5
+  3. Repeated single-source Dijkstra (baseline) ..................... 4
+  4. Multi-source Dijkstra with nearest-store labeling .............. 7
+  5. Indexed heap with true decrease-key ............................ 6
+  6. Heap-agnostic Dijkstra interface ............................... 2
+  7. Unit tests against NetworkX and SciPy .......................... 7
+  8. Edge cases and robustness ...................................... 2
+  9. Documentation, complexity writeup, and code review ............. 3
+                                                            TOTAL = 40
+
+
+============================================================
+1. ADJACENCY-LIST GRAPH STRUCTURE (4 pts)    Target: Oct 25
+============================================================
+Task: Convert the OSMnx walking network into our own adjacency-list graph.
+Intersections are nodes, street segments are edges weighted in miles.
+No NetworkX objects inside our own algorithm code.
+
+  4 pts  Graph class with add_node, add_edge, neighbors; converts a real
+         OSMnx Knox County graph; node and edge counts match the source;
+         edge weights are in miles and spot-checked against known lengths.
+  3 pts  Conversion works but weights or directedness are only partly verified.
+  2 pts  Structure exists and works on toy graphs only.
+  0 pts  Not implemented.
+
+Expected challenge: OSMnx graphs are directed multigraphs with parallel edges
+and lengths in meters. Decision needed on keeping the shortest parallel edge.
+
+
+============================================================
+2. BINARY HEAP WITH LAZY DELETION (5 pts)    Target: Nov 1
+============================================================
+Task: Write our own min-heap (array-based) supporting push and pop. Lazy
+deletion means stale entries are left in place and skipped when popped,
+rather than updating priorities in place.
+
+  5 pts  Push and pop are O(log n); passes tests for ordering, duplicates,
+         and empty-heap behavior; no use of Python's heapq in the final code.
+  4 pts  Correct but with minor untested cases or an inefficiency.
+  2-3 pts  Works on small inputs but fails ordering or edge-case tests.
+  0 pts  Not implemented.
+
+Expected challenge: choosing how a stale entry is detected in Dijkstra
+(compare popped distance against the best known distance).
+
+
+============================================================
+3. REPEATED SINGLE-SOURCE DIJKSTRA, BASELINE (4 pts)    Target: Nov 1
+============================================================
+Task: Standard Dijkstra from one source, then run it once per starting point
+(or once per store) to answer nearest-store queries. This is the O(N(V+E) log V)
+baseline the proposal compares against.
+
+  4 pts  Correct shortest distances on hand-checked toy graphs and on the real
+         graph; returns nearest store and distance for a given starting set.
+  3 pts  Correct on toy graphs, not yet run at full scale.
+  2 pts  Runs but has correctness errors on some inputs.
+  0 pts  Not implemented.
+
+Why it matters: it is also the reference our faster method must agree with.
+
+
+============================================================
+4. MULTI-SOURCE DIJKSTRA WITH NEAREST-STORE LABELING (7 pts)    Target: Nov 1
+============================================================
+Task: The central algorithm. Insert every store snapped to the graph into the
+priority queue at distance 0, run one Dijkstra pass, and label every
+intersection with (nearest store id, walking distance in miles).
+
+  7 pts  Single pass in O((V+E) log V); every reachable node is labeled with
+         its nearest store and correct distance; labels agree with the
+         repeated-Dijkstra baseline on toy graphs and on the full Knox graph;
+         ties handled deterministically.
+  5-6 pts  Correct on toy graphs and mostly correct at full scale, with
+         unresolved disagreements on a few nodes.
+  3-4 pts  Distances correct but store labels sometimes wrong.
+  1-2 pts  Runs but produces incorrect distances.
+  0 pts  Not implemented.
+
+Expected challenge: label propagation (each node must inherit the source label
+of whichever path relaxed it last). Unreachable nodes, such as pieces of the
+network disconnected from every store, need an explicit infinity value.
+
+
+============================================================
+5. INDEXED HEAP WITH TRUE DECREASE-KEY (6 pts)    Target: Nov 8
+============================================================
+Task: Second priority queue. Maintain a position map (node id to heap index)
+so that decrease-key updates a node's priority in place, with no stale entries.
+
+  6 pts  Push, pop, and decrease-key all O(log n); position map stays
+         consistent after every swap; passes randomized tests that compare its
+         pop order to the lazy binary heap; plugs into multi-source Dijkstra.
+  4-5 pts  Works in Dijkstra but position map bugs appear in some randomized tests.
+  2-3 pts  Decrease-key works on small hand-built cases only.
+  0 pts  Not implemented.
+
+Expected challenge: keeping the position map correct during sift-up and
+sift-down is the most common source of bugs here.
+
+
+============================================================
+6. HEAP-AGNOSTIC DIJKSTRA INTERFACE (2 pts)    Target: Nov 8
+============================================================
+Task: Define a small shared interface so the same Dijkstra code runs with
+either heap, which Tejas needs for fair timing comparisons.
+
+  2 pts  One function call switches heaps; results are identical for both;
+         documented so Tejas can call it from the benchmark harness.
+  1 pt   Both heaps work but need separate copies of the Dijkstra code.
+  0 pts  Not done.
+
+
+============================================================
+7. UNIT TESTS AGAINST NETWORKX AND SCIPY (7 pts)    Target: Nov 8, finalized Nov 15
+============================================================
+Task: Verify our implementations against trusted libraries. NetworkX and SciPy
+are used only here, never inside our algorithms.
+
+  7 pts  Automated test suite (pytest) covering: both heaps, repeated Dijkstra,
+         and multi-source Dijkstra; compares distances to NetworkX
+         (multi-source) and SciPy (shortest_path / dijkstra) on random graphs
+         of several sizes and on the full Knox graph; floating-point
+         tolerance defined; tests run with one command and pass.
+  5-6 pts  Comparison tests exist for most components; full Knox graph not yet covered.
+  3-4 pts  Tests for toy graphs only, or only one reference library used.
+  1-2 pts  A few informal checks, not automated.
+  0 pts  No tests.
+
+Expected challenge: a reference needs to be set up equivalently (same graph,
+same weights, same sources), otherwise mismatches are false alarms.
+
+
+============================================================
+8. EDGE CASES AND ROBUSTNESS (2 pts)    Target: Nov 15
+============================================================
+Task: Handle the cases real data will hit.
+
+  2 pts  Tests and handling for: disconnected components, a store snapped to
+         the same node as another store, zero-length edges, a single-node
+         graph, and an empty store list. Behavior documented.
+  1 pt   Some of these are handled and tested.
+  0 pts  Not addressed.
+
+
+============================================================
+9. DOCUMENTATION, COMPLEXITY WRITEUP, AND CODE REVIEW (3 pts)    Target: Nov 22
+============================================================
+Task: Make the core code understandable and defensible at the demo.
+
+  3 pts  Docstrings and a README section for the algorithm modules; a written
+         explanation of the complexity of repeated vs. multi-source Dijkstra
+         and of lazy vs. indexed heaps (co-written with Tejas); reviewed at
+         least one of Pranav's or Tejas's modules and had mine reviewed; can
+         explain the central tradeoff without notes.
+  2 pts  Code documented, but no review or writeup completed.
+  1 pt   Minimal comments only.
+  0 pts  Not done.
+
+
+============================================================
+TIMELINE AND CHECKPOINTS
+============================================================
+  Oct 25   Item 1 complete (graph structure ready for teammates)
+  Nov 1    Items 2, 3, 4 complete (first correct nearest-store result)
+  Nov 8    Items 5, 6 complete; first pass of item 7 (team checkpoint)
+  Nov 15   Items 7 and 8 finalized; fixes from benchmarking
+  Nov 22   Item 9 complete; code freeze
+  Nov 23-30   Report and demo preparation (shared with team)
+
+Dependencies:
+  - Item 1 needs Pranav's cleaned OSMnx data to test on the real graph.
+  - Item 4 needs Pranav's snapped store nodes (via the k-d tree) for full-scale runs.
+    Use hand-picked node IDs until then.
+  - Item 6 feeds Tejas's benchmark harness.
+
+Biggest risks:
+  - Item 4 label propagation and item 5 position map bugs. Mitigation: build
+    the randomized comparison tests (item 7) alongside them, not after.
+  - Full Knox graph runtime in pure Python. Mitigation: test on a smaller
+    area first, then scale.
