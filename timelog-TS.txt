@@ -1,1 +1,32 @@
-
+CHALLENGE 06 SUBMISSION - TS
+ 
+1. SHARED REPOSITORY
+  
+ 
+2. INDIVIDUAL CODE CONTRIBUTION
+   [link/path to file, commit hash, or branch]
+   Corresponds to rubric tasks: Task 1 (tract ID check) and Task 3 (benchmark harness, started)
+   File: benchmark.py
+   How to run: python3 benchmark.py   (runs stub methods, writes benchmark_results.csv)
+ 
+3. PROGRESS SUMMARY
+   [What you completed this week, concretely. Only list what is actually done.]
+ 
+4. REFLECTION AND NEXT-STEP PLAN
+   What went well:    [ ]
+   What changed:      [e.g. tasks moved, scope adjusted, and why]
+   What remains:      [tasks 2-8 from rubric with dates]
+   Help needed:       [specific technical or coordination obstacles]
+   Delayed tasks:     [for each task moved later: why, and the obstacle]
+ 
+5. TIME LOG (target: ~1 hr lab + ~4 hrs outside lab)
+   Date     | Hours | Activity / what was accomplished
+   ---------|-------|-------------------------------------------
+   Oct 22   | 1.0   | Wrote and tested benchmark.py: a timing harness (warm-up, repeated
+            |       |   runs, median/min/max, CSV output) plus a tract ID validity check;
+            |       |   ran it with stub methods and committed it to the shared repo.
+   TOTAL: 1.0
+ 
+6. MILESTONE RUBRIC
+   (paste contents of milestones-TS.txt here)
+ 
