@@ -1,23 +1,54 @@
 CHALLENGE 06 SUBMISSION - TS
  
 1. SHARED REPOSITORY
-  
+  https://github.com/pgovindu08/final_project
  
 2. INDIVIDUAL CODE CONTRIBUTION
    [link/path to file, commit hash, or branch]
-   Corresponds to rubric tasks: Task 1 (tract ID check) and Task 3 (benchmark harness, started)
+   Corresponds to rubric tasks: Task 1 (tract ID check) and Task 3 (benchmark harness, started) as show in the milestones txt file
    File: benchmark.py
    How to run: python3 benchmark.py   (runs stub methods, writes benchmark_results.csv)
  
 3. PROGRESS SUMMARY
-   [What you completed this week, concretely. Only list what is actually done.]
+   - Wrote my individual 40-point milestone rubric (milestones-TS.txt), aligned with the
+     team's FoodRoute milestone plan: 8 tasks covering the CDC PLACES join, complexity
+     analysis, benchmark harness, timing experiments, misclassification count, diabetes
+     correlation, summary statistics, and report sections.
+   - Wrote and tested benchmark.py, a reusable timing harness that does warm-up runs,
+     repeated measurements, and median/min/max reporting across growing input sizes, and
+     writes results to CSV. It currently runs on stub methods so it works before SN's
+     Dijkstra and heaps are finished.
+   - Added check_tract_ids(), which flags tract IDs that are not valid 11-digit strings
+     (catches lost leading zeros), as the first piece of rubric Task 1.
+   - Committed these files to the shared repository and reviewed my plan with a TA.
+ 
  
 4. REFLECTION AND NEXT-STEP PLAN
-   What went well:    [ ]
-   What changed:      [e.g. tasks moved, scope adjusted, and why]
-   What remains:      [tasks 2-8 from rubric with dates]
-   Help needed:       [specific technical or coordination obstacles]
-   Delayed tasks:     [for each task moved later: why, and the obstacle]
+   What went well:    The harness runs end to end and produces CSV output, so the timing
+                      infrastructure is ready before the algorithms exist. Building it
+                      against stubs let me start my part without waiting on SN or PG.
+   What changed:      I first drafted the rubric from the proposal's ownership line alone,
+                      then rewrote it to match the team milestone document. Health analysis
+                      became the CDC PLACES diabetes vs. distance Spearman correlation, and
+                      accuracy comparison became counting tracts the straight-line method
+                      misclassifies.
+   What remains:      Task 1: download CDC PLACES 2025 and run the ID check on real data
+                        (Oct 25)
+                      Task 2: complexity analysis draft (Nov 1)
+                      Task 3: wire the harness to SN's real code (Nov 8)
+                      Tasks 4-6: timing experiments and plots, misclassification count,
+                        and Spearman correlations (Nov 15)
+                      Task 7: summary statistics table with PG (Nov 22)
+                      Task 8: report sections and demo rehearsal (Nov 25)
+   Help needed:       (1) Agree with SN on the function signatures for the Dijkstra
+                      variants so the harness can call them directly. (2) Confirm with PG
+                      how tract IDs are stored (string vs. integer) so the join with CDC
+                      data does not drop leading zeros. (3) Confirm the exact CDC PLACES
+                      2025 column names and that the diabetes measure is available at
+                      tract level.
+   Delayed tasks:     None moved so far. Task 1 is only partly done (the ID check is
+                      written, but the CDC file has not yet been downloaded and joined);
+                      it is still on schedule for Oct 25.
  
 5. TIME LOG (target: ~1 hr lab + ~4 hrs outside lab)
    Date     | Hours | Activity / what was accomplished
