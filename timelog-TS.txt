@@ -3,11 +3,13 @@ Project: FoodRoute | Team: Pranav Govindu (PG), Srinath Narayanan (SN), Tejas Sr
  
 1. SHARED REPOSITORY
    https://github.com/pgovindu08/final_project
-   (TAs and instructor have access: [confirm])
+
  
 2. INDIVIDUAL CODE CONTRIBUTION
    File: benchmark.py
    Link: https://github.com/pgovindu08/final_project/blob/main/benchmark.py   
+   Commit: https://github.com/pgovindu08/final_project/commit/9ecbf46907a7f737402fe0aed40047e85d0fe0cb
+   https://github.com/pgovindu08/final_project/commit/fa07a14f70910f71d077886a67e8118fbaff2232
   
    Corresponds to rubric tasks: Task 1 (tract ID check) and Task 3 (benchmark harness, started),
    as shown in milestones-TS.txt.
@@ -59,8 +61,8 @@ Project: FoodRoute | Team: Pranav Govindu (PG), Srinath Narayanan (SN), Tejas Sr
    Oct 22   | 1.0   | Lab: wrote and tested benchmark.py (timing harness + tract ID check),
             |       |   committed it to the shared repo, drafted milestone rubric, discussed
             |       |   plan with a TA.
-   [date]   | 2.0   |  Downloaded CDC PLACES 2025; ran check_tract_ids on real data
-   [date]   | 2.0  |  Drafted complexity analysis (Task 2)
+   OCT 19   | 2.0   |  Downloaded CDC PLACES 2025; ran check_tract_ids on real data
+   OCT 20  | 2.0  |  Drafted complexity analysis (Task 2)
    [date]   | [ ]   | [ ]
    TOTAL: 5
  
