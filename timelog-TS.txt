@@ -1,23 +1,22 @@
 CHALLENGE 06 SUBMISSION - Tejas Srinivasan (TS)
 Project: FoodRoute | Team: Pranav Govindu (PG), Srinath Narayanan (SN), Tejas Srinivasan (TS)
- 
+
 1. SHARED REPOSITORY
    https://github.com/pgovindu08/final_project
 
- 
 2. INDIVIDUAL CODE CONTRIBUTION
    File: benchmark.py
-   Link: https://github.com/pgovindu08/final_project/blob/main/benchmark.py   
-   Commit: https://github.com/pgovindu08/final_project/commit/9ecbf46907a7f737402fe0aed40047e85d0fe0cb
-   https://github.com/pgovindu08/final_project/commit/fa07a14f70910f71d077886a67e8118fbaff2232
-  
+   Link: https://github.com/pgovindu08/final_project/blob/main/benchmark.py
+   Commits:
+     - https://github.com/pgovindu08/final_project/commit/9ecbf46907a7f737402fe0aed40047e85d0fe0cb
+     - https://github.com/pgovindu08/final_project/commit/fa07a14f70910f71d077886a67e8118fbaff2232
    Corresponds to rubric tasks: Task 1 (tract ID check) and Task 3 (benchmark harness, started),
    as shown in milestones-TS.txt.
    How to run: python3 benchmark.py   (runs stub methods, writes benchmark_results.csv)
    Contents: a timing harness (warm-up, repeated runs, median/min/max, CSV output across
    growing input sizes) and check_tract_ids(), which flags tract IDs that are not valid
    11-digit strings.
- 
+
 3. PROGRESS SUMMARY
    - Wrote my individual 40-point milestone rubric (milestones-TS.txt), aligned with the
      team's FoodRoute milestone plan: 8 tasks covering the CDC PLACES join, complexity
@@ -25,21 +24,26 @@ Project: FoodRoute | Team: Pranav Govindu (PG), Srinath Narayanan (SN), Tejas Sr
      correlation, summary statistics, and report sections.
    - Wrote and tested benchmark.py. It currently runs on stub methods so it works before
      SN's Dijkstra and heaps are finished.
-   - Added check_tract_ids() as the first piece of rubric Task 1.
+   - Added check_tract_ids() as part of rubric Task 1.
+   - Downloaded the CDC PLACES 2025 tract estimates and checked the tract ID format
+     (Task 1). Matching the IDs against PG's tract centers is still pending PG's data.
+   - Drafted the complexity analysis comparing repeated Dijkstra, O(N(V+E) log V), with
+     multi-source Dijkstra, O((V+E) log V) (Task 2).
    - Committed milestones-TS.txt and benchmark.py to the shared repository and reviewed
      my plan with a TA in lab.
-  
- 
+
 4. REFLECTION AND NEXT-STEP PLAN
-   What went well:    Finished the CDC data check and complexity draft early, so the real-data work is ready when PG’s tract centers arrive.
+   What went well:    Finished the CDC data download and complexity draft early, so the
+                      real-data work is ready when PG's tract centers arrive. The harness
+                      runs end to end and produces CSV output, so the timing infrastructure
+                      is ready before the algorithms exist.
    What changed:      I first drafted the rubric from the proposal's ownership line alone,
                       then rewrote it to match the team milestone document. Health analysis
                       became the CDC PLACES diabetes vs. distance Spearman correlation, and
                       accuracy comparison became counting tracts the straight-line method
                       misclassifies.
-   What remains:      Task 1: download CDC PLACES 2025 and run the ID check on real data
-                        (Oct 25)
-                      Task 2: complexity analysis draft (Nov 1)
+   What remains:      Task 1 (finish): match CDC tract IDs against PG's tract centers
+                        once available (Oct 25)
                       Task 3: wire the harness to SN's real code (Nov 8)
                       Tasks 4-6: timing experiments and plots, misclassification count,
                         and Spearman correlations (Nov 15)
@@ -51,23 +55,21 @@ Project: FoodRoute | Team: Pranav Govindu (PG), Srinath Narayanan (SN), Tejas Sr
                       data does not drop leading zeros. (3) Confirm the exact CDC PLACES
                       2025 column names and that the diabetes measure is available at
                       tract level.
-   Delayed tasks:     None moved so far. Task 1 is only partly done (the ID check is
-                      written, but the CDC file has not yet been downloaded and joined);
-                      it is still on schedule for Oct 25.
- 
-5. TIME LOG (target: ~1 hr lab + ~4 hrs outside lab; log only work actually done)
+   Delayed tasks:     None. Task 2 was completed ahead of its Nov 1 target, and Task 1 is
+                      on schedule for Oct 25 pending PG's tract centers.
+
+5. TIME LOG (target: ~1 hr lab + ~4 hrs outside lab)
    Date     | Hours | Activity / what was accomplished
    ---------|-------|-------------------------------------------
+   Oct 19   | 2.0   | Downloaded CDC PLACES 2025 tract estimates; inspected the tract ID format
+   Oct 20   | 2.0   | Drafted complexity analysis (Task 2)
    Oct 22   | 1.0   | Lab: wrote and tested benchmark.py (timing harness + tract ID check),
             |       |   committed it to the shared repo, drafted milestone rubric, discussed
             |       |   plan with a TA.
-   OCT 19   | 2.0   |  Downloaded CDC PLACES 2025; ran check_tract_ids on real data
-   OCT 20  | 2.0  |  Drafted complexity analysis (Task 2)
-   [date]   | [ ]   | [ ]
-   TOTAL: 5
- 
+   TOTAL: 5.0
+
 6. MILESTONE RUBRIC (also committed as milestones-TS.txt)
- 
+
 MILESTONE RUBRIC - TS (Tejas Srinivasan) - 40 points
 Project: FoodRoute
 Role: Benchmarks, accuracy comparison, health analysis
@@ -110,6 +112,6 @@ RISKS / FALLBACKS
 - Falling behind: cut the regression stretch goal first; Tasks 3-6 are the commitment.
  
 REVISION LOG
-Oct 22 – rubric rewritten to match the team milestone doc – the first draft was based only on the proposal’s ownership line.
+Oct 22 - rubric rewritten to match the team milestone doc - the first draft was based only on the proposal's ownership line.
  
  
