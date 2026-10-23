@@ -1,4 +1,9 @@
 osmnx>=1.9
 networkx>=3.0
+geopandas
+pandas
+numpy
 scipy>=1.11
+folium
+matplotlib
 pytest>=7.0

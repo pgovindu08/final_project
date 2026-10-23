@@ -1,0 +1,31 @@
+Milestone Rubric — Pranav Govindu (PG)
+Project: FoodRoute
+Team repo: https://github.com/pgovindu08/final_project
+Team: Pranav Govindu (PG), Srinath Narayanan (SN), Tejas Srinivasan (TS)
+PG ownership: Data, k-d tree, map
+Total: 40 points
+
+Milestone 1 (Oct 19 - Oct 25)
+  [4 pts] Set up build environment; get tutorial/starter code compiling in repo
+          Done when: project builds cleanly from a fresh clone (venv + `pip install -r requirements.txt`, `python -m pytest tests/` passes)
+  [4 pts] Prototype of data loading
+          Done when: committed, compiles, and demonstrates downloading the Knox County walking network via OSMnx, projected to meters (`src/data_loading.py`)
+
+Milestone 2 (Oct 26 - Nov 8)
+  [8 pts] k-d tree built from scratch (construction + nearest-neighbor query)
+          Done when: `src/kdtree.py` nearest-neighbor queries match a brute-force search on a small hand-checked dataset
+  [6 pts] Snap stores/tracts to the road network and compute straight-line distances
+          Done when: every SNAP store and tract center is snapped to its nearest graph node (`src/snapping.py`), and the k-d tree produces a straight-line nearest-store distance for every tract
+
+Milestone 3 (Nov 9 - Nov 22)
+  [8 pts] Food-access classification
+          Done when: `src/classification.py` labels each census tract low/adequate access using USDA cutoffs (0.5 or 1 mi urban, 10 or 20 mi rural), from walking distance to the nearest SNAP-authorized supermarket
+  [5 pts] Interactive map and integration with teammates (SN's Dijkstra walking distances, TS's health correlation)
+          Done when: the Folium map renders access classification, walking-vs-straight-line disagreement, and diabetes-rate correlation end-to-end from a fresh clone
+
+Final (Nov 23 - Nov 30)
+  [3 pts] Testing / bug fixes for my components
+  [2 pts] Documentation (README section, comments) for my components
+
+Revisions after lab:
+  - ([date]) [what changed and why]

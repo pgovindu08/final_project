@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# downloaded/generated data -- regenerate with src/data_loading.py
+data/raw/
+data/processed/
+cache/
