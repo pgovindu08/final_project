@@ -40,5 +40,5 @@ RISKS / FALLBACKS
 - Falling behind: cut the regression stretch goal first; Tasks 3-6 are the commitment.
  
 REVISION LOG
-(date - what changed - why)
+(date, what changed, why)
  
