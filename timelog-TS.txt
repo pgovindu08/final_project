@@ -59,5 +59,39 @@ CHALLENGE 06 SUBMISSION - TS
    TOTAL: 1.0
  
 6. MILESTONE RUBRIC
-   (paste contents of milestones-TS.txt here)
+    
+TASK                                                                    PTS  TARGET   TEAM MILESTONE
+1. Download CDC PLACES 2025 tract estimates; confirm 11-digit tract       3   Oct 25   M1
+   ID join keys match PG's tract centers (loader + join-check script).
+2. Draft on-paper complexity analysis: repeated Dijkstra                  4   Nov 1    M2
+   O(N(V+E) log V) vs multi-source O((V+E) log V), with the
+   binary-heap vs decrease-key discussion.
+3. Benchmark harness: repeatable timing (warm-up, repeated runs,          7   Nov 8    M3
+   median/min/max), growing input sizes (stores N and graph size),
+   results to CSV. Built against a stub, then wired to SN's real code.
+4. Timing experiments for all methods (repeated Dijkstra, multi-source    8   Nov 15   M4
+   with binary heap, multi-source with indexed heap, k-d tree);
+   complexity plots comparing measured vs predicted growth.
+5. Accuracy comparison: count tracts the straight-line (k-d tree)         6   Nov 15   M4
+   method misclassifies vs walking distance, using PG's USDA
+   low/adequate access cutoffs.
+6. Health analysis: join CDC PLACES diabetes rates; Spearman              7   Nov 15   M4
+   correlation of diabetes vs walking distance and vs straight-line
+   distance; report effect size and p-values, correlation only.
+7. Summary statistics table with PG for the map/report panel.             2   Nov 22   M5
+8. Report: complexity, benchmark, accuracy, and health sections plus      3   Nov 25   M6
+   limitations; time log attached; demo rehearsal (explain
+   multi-source vs repeated Dijkstra and the heap tradeoff).
+                                                                 TOTAL  40
+ 
+DEPENDENCIES
+- Tasks 3-4 need SN's heaps and Dijkstra (M2-M3). Mitigation: code to the agreed
+  function signatures and test with stubs and a small graph first.
+- Tasks 5-6 need PG's snapped nodes, distances, and classification (M3-M4).
+- Checkpoints: Nov 8 (core pipeline complete), Nov 22 (code freeze).
+ 
+RISKS / FALLBACKS
+- Timing noise: many repetitions, report medians, close other programs.
+- Tract ID mismatches (leading zeros, 10 vs 11 digits): handled in Task 1 early.
+- Falling behind: cut the regression stretch goal first; Tasks 3-6 are the commitment.
  
