@@ -60,6 +60,64 @@ def load_snap_stores(refresh=False):
     return df
 
 
+def load_tract_demographics(api_key=None, refresh=False):
+    """
+    Pull poverty rate and population for Knox County census tracts from ACS 5-year.
+
+    Requires a free Census API key from https://api.census.gov/data/key_signup.html
+    Pass it as api_key=, or set the CENSUS_API_KEY environment variable.
+
+    Returns DataFrame with columns:
+        tract_id      -- 11-digit FIPS string
+        poverty_rate  -- fraction of population below poverty level (0-1)
+        population    -- total population estimate
+    Returns None if no API key is available.
+    """
+    import json
+    import os
+
+    key = api_key or os.environ.get("CENSUS_API_KEY", "")
+    if not key:
+        print("NOTE: No CENSUS_API_KEY found -- skipping real demographics.")
+        print("      Get a free key at https://api.census.gov/data/key_signup.html")
+        print("      Then: export CENSUS_API_KEY=your_key  (or pass api_key=)")
+        return None
+
+    path = PROCESSED / "knox_tract_demographics.csv"
+    if path.exists() and not refresh:
+        return pd.read_csv(path, dtype={"tract_id": str})
+
+    print("Downloading Knox County tract demographics from Census ACS 5-year...")
+    # B17001_001E = poverty universe total, B17001_002E = below poverty level
+    # B01003_001E = total population
+    url = (
+        "https://api.census.gov/data/2022/acs/acs5"
+        "?get=B17001_001E,B17001_002E,B01003_001E"
+        f"&for=tract:*&in=state:47+county:093&key={key}"
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "FoodRoute student project"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        raw = resp.read().decode("utf-8")
+    data = json.loads(raw)
+
+    cols = data[0]
+    df   = pd.DataFrame(data[1:], columns=cols)
+
+    df["B17001_001E"] = pd.to_numeric(df["B17001_001E"], errors="coerce")
+    df["B17001_002E"] = pd.to_numeric(df["B17001_002E"], errors="coerce")
+    df["B01003_001E"] = pd.to_numeric(df["B01003_001E"], errors="coerce")
+
+    df["tract_id"]     = (df["state"] + df["county"] + df["tract"]).str.zfill(11)
+    df["poverty_rate"] = df["B17001_002E"] / df["B17001_001E"]
+    df["population"]   = df["B01003_001E"]
+
+    result = df[["tract_id", "poverty_rate", "population"]].dropna()
+    PROCESSED.mkdir(parents=True, exist_ok=True)
+    result.to_csv(path, index=False)
+    print(f"Tract demographics: {len(result)} tracts")
+    return result
+
+
 if __name__ == "__main__":
     load_walk_network(refresh="--refresh" in sys.argv)
     load_snap_stores()

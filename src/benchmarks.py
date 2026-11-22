@@ -114,8 +114,119 @@ def run_kdtree_benchmarks(
     run_suite({"kdtree_nearest": bench_kdtree_nearest}, point_counts, make_args, out_csv)
 
 
+def plot_dijkstra_results(
+    csv_path="benchmark_results_dijkstra.csv",
+    out_png=None,
+):
+    """Read benchmark CSV and produce a linear + log-log complexity plot."""
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import pandas as _pd
+    from pathlib import Path as _Path
+
+    df = _pd.read_csv(csv_path)
+
+    colors = {
+        "repeated_lazy":    "#d73027",
+        "repeated_indexed": "#fc8d59",
+        "multi_lazy":       "#1a9850",
+        "multi_indexed":    "#91cf60",
+    }
+    labels = {
+        "repeated_lazy":    "Repeated (lazy heap)    O(N·(V+E)logV)",
+        "repeated_indexed": "Repeated (indexed heap) O(N·(V+E)logV)",
+        "multi_lazy":       "Multi-source (lazy)     O((V+E)logV)",
+        "multi_indexed":    "Multi-source (indexed)  O((V+E)logV)",
+    }
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
+
+    for method, grp in df.groupby("method"):
+        grp = grp.sort_values("size")
+        xs  = grp["size"].values
+        ys  = grp["median_s"].values
+        ax1.plot(xs, ys, "o-", color=colors.get(method, "gray"),
+                 label=labels.get(method, method))
+        ax2.loglog(xs, ys, "o-", color=colors.get(method, "gray"),
+                   label=labels.get(method, method))
+
+    # Theoretical curves (normalised to first data point of each family)
+    sizes = np.array(sorted(df["size"].unique()), dtype=float)
+
+    def theory_curve(ax, method_name, n_stores=1):
+        grp = df[df["method"] == method_name].sort_values("size")
+        if grp.empty:
+            return
+        v0, t0 = grp["size"].values[0], grp["median_s"].values[0]
+        c = t0 / (n_stores * 4 * v0 * np.log(v0))
+        t_theory = c * n_stores * 4 * sizes * np.log(sizes)
+        ax.loglog(sizes, t_theory, "--",
+                  color=colors.get(method_name, "gray"), alpha=0.35, linewidth=1)
+
+    theory_curve(ax2, "repeated_lazy",  n_stores=10)
+    theory_curve(ax2, "multi_lazy",     n_stores=1)
+
+    for ax in (ax1, ax2):
+        ax.set_xlabel("Graph nodes (V)")
+        ax.set_ylabel("Median time (s)")
+        ax.legend(fontsize=7)
+        ax.grid(True, alpha=0.3)
+    ax1.set_title("Dijkstra timing — linear scale")
+    ax2.set_title("Dijkstra timing — log-log  (dashed = theory)")
+    fig.tight_layout()
+
+    if out_png is None:
+        out_png = _Path(csv_path).parent / "benchmark_dijkstra_plot.png"
+    _Path(out_png).parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(out_png, dpi=150, bbox_inches="tight")
+    print(f"Plot saved -> {out_png}")
+    plt.show()
+
+
+def plot_kdtree_results(
+    csv_path="benchmark_results_kdtree.csv",
+    out_png=None,
+):
+    """Plot k-d tree nearest-neighbor timing with O(log n) theory overlay."""
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import pandas as _pd
+    from pathlib import Path as _Path
+
+    df   = _pd.read_csv(csv_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    grp  = df[df["method"] == "kdtree_nearest"].sort_values("size")
+    xs   = grp["size"].values.astype(float)
+    ys   = grp["median_s"].values
+
+    ax.loglog(xs, ys, "o-", color="#2166ac", label="k-d tree nearest (measured)")
+
+    # O(n_queries * log n) theory
+    n_queries = 100
+    c = ys[0] / (n_queries * np.log(xs[0]))
+    ax.loglog(xs, c * n_queries * np.log(xs), "--", color="#2166ac",
+              alpha=0.4, label=f"O({n_queries}·log n) theory")
+
+    ax.set_xlabel("Number of points (n)")
+    ax.set_ylabel("Median time (s)  for 100 queries")
+    ax.set_title("k-d tree nearest-neighbor timing (log-log)")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+
+    if out_png is None:
+        out_png = _Path(csv_path).parent / "benchmark_kdtree_plot.png"
+    _Path(out_png).parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(out_png, dpi=150, bbox_inches="tight")
+    print(f"Plot saved -> {out_png}")
+    plt.show()
+
+
 if __name__ == "__main__":
     print("=== Dijkstra benchmarks ===")
     run_dijkstra_benchmarks()
     print("\n=== k-d tree benchmarks ===")
     run_kdtree_benchmarks()
+    print("\n=== Plotting results ===")
+    plot_dijkstra_results()
+    plot_kdtree_results()
